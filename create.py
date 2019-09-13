@@ -44,13 +44,43 @@ class Create:
     # Read Sensors
     def sensor_check(self, packet):
         if(packet in [8,9,10,11,12,13,37]):
-            print("This will return a boolean!")
+            print("This returns a boolean!\n")
+            return self.get_bool(packet)
         elif(packet in [1,2,3,4,5,6]):
-            print("This will return several packets")
+            print("This might eventually print several packets!\n")
         elif(packet in [7,14,18,34]):
-            print("This will return a list of booleans")
+            print("This returns a string of 1's and 0's!\n")
+            return self.get_bool_list(packet)
+        elif(packet in [19,20,22,23,25,26,27,28,29,30,31,33,39,40,41,42]):
+            print("This returns a 2 byte value!\n")
+            return self.get_short(packet)
+        elif(packet in [17,24,36,38]):
+            print("This returns a single byte value!\n")
+            return self.get_byte(packet)
+        elif(packet in [21,32,35]):
+            print("This will return a special value!\n")
+        else:
+            print("This packet ID is unused!\n")
         
-            
+    # Read Boolean
+    def get_bool(self, packet):
+        self.s.write(struct.pack("BB", 142, packet))
+        return struct.unpack('?',self.s.read(1))[0]
+    
+    # Read Single Byte
+    def get_byte(self, packet):
+        self.s.write(struct.pack("BB", 142, packet))
+        return struct.unpack('B',self.s.read(1))[0]
+        
+    # Read Multi-byte Value
+    def get_short(self, packet):
+        self.s.write(struct.pack("BB", 142, packet))
+        return struct.unpack('>h',self.s.read(2))[0]
+    
+    # Read Many Booleans
+    def get_bool_list(self, packet):
+        self.s.write(struct.pack("BB", 142, packet))
+        return bin(struct.unpack('B',self.s.read(1))[0])[2:].zfill(8)
     
     # Prints packet ID and values of all Create sensors
     def sensor_print_all(self):

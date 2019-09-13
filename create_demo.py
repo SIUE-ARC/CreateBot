@@ -48,3 +48,6 @@ while(1):
             robot.passive_mode()
         else:
             print("Invalid Input, No mode change\n")
+    elif(command == 'c'):
+        packet = np.int16(input("Input packet ID to check:\t"))
+        print(robot.sensor_check(packet))
