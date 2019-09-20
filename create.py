@@ -94,9 +94,10 @@ class Create:
     def get_bool_list(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
         tmp = bin(struct.unpack('B',self.s.read(1))[0])[2:].zfill(5)
+        temp = list()
         for val in range(len(tmp)):
-            tmp[val] = self.bit_to_bool(tmp[val])
-        return tmp
+            temp.append(self.bit_to_bool(tmp[val]))
+        return temp
     
     # Prints packet ID and values of all Create sensors in a group
     def sensor_print_group(self, packet):
