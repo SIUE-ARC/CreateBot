@@ -37,7 +37,7 @@ while(1):
         print("MAYDAY MAYDAY MAYDAY")
         robot.drive_direct(0,0);
     elif(command == 'a'): #Check Sensors
-        robot.sensor_print_all()
+        robot.sensor_print_group(6)
     elif(command == 'm'): #Change Mode
         mode = input("Input mode to switch to (S, F, P):\t")
         if(mode in ['s','S']):
@@ -51,3 +51,5 @@ while(1):
     elif(command == 'c'):
         packet = np.int16(input("Input packet ID to check:\t"))
         print(robot.sensor_check(packet))
+    elif(command == '?'):
+        robot.sensor_print_group(2)
