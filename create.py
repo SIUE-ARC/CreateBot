@@ -4,12 +4,12 @@ import time
 import struct
 class Create:
 
-    def __init__(self,port):
+    def __init__(self,port="/dev/ttyUSB0"):
         self.s = serial.Serial(port, 57600)
         self.start()
         self.full_mode()
         self.leds()
-        
+
     def start(self):
         self.s.write(struct.pack("B", 128))
 
@@ -40,7 +40,7 @@ class Create:
     def leds(self, play=0, advance=0, power_color=0, power_brightness=255):
         byte1 = (0x08 if advance else 0x00) | (0x02 if play else 0x00)
         self.s.write(struct.pack("BBBB", 139, byte1, power_color, power_brightness))
-    
+
     # Read Sensors
     def sensor_check(self, packet):
         if(packet in [8,9,10,11,12,13,37]):
@@ -49,9 +49,18 @@ class Create:
             print("This will return several packets")
         elif(packet in [7,14,18,34]):
             print("This will return a list of booleans")
-        
-            
-    
+
+    def sensor_reading(self, name):
+        if name == "help":
+            # TODO: Display all options
+            pass
+        if name == "bumper":
+            self.s.write(struct.pack("BB", 142, 7))
+            bumper = bin(self.s.read(1)[0])[2:].zfill(5)[-2:]
+            return bumper
+
+
+
     # Prints packet ID and values of all Create sensors
     def sensor_print_all(self):
         self.s.write(struct.pack("BB", 142, 6))
@@ -141,7 +150,7 @@ class Create:
         print("(40) Radius: ",struct.unpack('>h',self.s.read(2))[0], "mm\n")
         print("(41) Right Velocity: ",struct.unpack('>h',self.s.read(2))[0], "mm/s\n")
         print("(42) Left Velocity: ",struct.unpack('>h',self.s.read(2))[0], "mm/s\n")
-        
+
     #used to make sensor check look nicer
     def bit_to_bool(self,val):
         return val == '1'

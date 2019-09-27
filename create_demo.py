@@ -1,14 +1,12 @@
+#!/usr/bin/env python3
 import time
 import create
 import numpy as np
 robot = create.Create("/dev/ttyUSB0")
 
 
-
-
-
 command = ''
-
+print("Robot initialized!")
 while(1):
     command = input()
     if(command == 'q'): #Quit
