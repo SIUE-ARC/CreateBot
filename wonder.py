@@ -5,6 +5,8 @@ import create as cr
 import time
 import xbox
 
+DRIVE_MAX = 250
+
 robot = cr.Create()             #Initialize robot
 joy = xbox.Joystick()           #Initialize joystick
 
@@ -47,4 +49,30 @@ def main():
             print("Exiting")
             break
 
-main()
+def manual_control(robot, joy):
+    while not joy.Back():
+        try:
+            R_wheel = round(joy.leftY()*DRIVE_MAX)
+            L_wheel = round(joy.leftY()*DRIVE_MAX)
+            offset = round(joy.leftX()*DRIVE_MAX)
+            if offset < 0:
+                if R_wheel >= 0 or L_wheel >= 0:
+                    L_wheel -= abs(offset)
+                    R_wheel += abs(offset)
+                elif R_wheel < 0 or L_wheel < 0:
+                    R_wheel -= abs(offset)
+                    L_wheel += abs(offset)
+            elif offset > 0:
+                if R_wheel >= 0 or L_wheel >= 0:
+                    R_wheel -= abs(offset)
+                    L_wheel += abs(offset)
+                elif R_wheel < 0 or L_wheel < 0:
+                    L_wheel -= abs(offset)
+                    R_wheel += abs(offset)
+            robot.drive_direct(R_wheel,L_wheel)
+        except KeyboardInterrupt:
+            stop(robot)
+            print("Exiting")
+            break
+
+manual_control(robot, joy)
