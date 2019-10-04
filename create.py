@@ -58,7 +58,7 @@ class Create:
         if(packet in [8,9,10,11,12,13,37]):
             return self.get_bool(packet)
         # TODO Make this return sensor values instead of just printing them
-        elif(packet in [1,2,3,4,5,6]):
+        elif(packet in [0,1,2,3,4,5,6]):
             self.sensor_print_group(packet)
         elif(packet in [7,14,18,34]):
             return self.get_bool_list(packet)
