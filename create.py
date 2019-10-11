@@ -10,7 +10,7 @@ class Create:
         self.start()
         self.full_mode()
         self.leds()
-        
+
     # Required for further commands to be read
     def start(self):
         self.s.write(struct.pack("B", 128))
@@ -52,7 +52,7 @@ class Create:
     def leds(self, play=0, advance=0, power_color=0, power_brightness=255):
         byte1 = (0x08 if advance else 0x00) | (0x02 if play else 0x00)
         self.s.write(struct.pack("BBBB", 139, byte1, power_color, power_brightness))
-    
+
     # Read Sensors
     def sensor_check(self, packet):
         if(packet in [8,9,10,11,12,13,37]):
@@ -74,22 +74,22 @@ class Create:
                 tmp[0] = 19200
         else:
             print("This packet ID is unused!\n")
-        
+
     # Read Single Boolean
     def get_bool(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
         return struct.unpack('?',self.s.read(1))[0]
-    
+
     # Read Single Byte
     def get_byte(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
         return struct.unpack('B',self.s.read(1))[0]
-        
+
     # Read Multi-byte Value
     def get_short(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
         return struct.unpack('>h',self.s.read(2))[0]
-    
+
     # Read List of Booleans
     def get_bool_list(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
@@ -98,7 +98,7 @@ class Create:
         for val in range(len(tmp)):
             temp.append(self.bit_to_bool(tmp[val]))
         return temp
-    
+
     # Prints packet ID and values of all Create sensors in a group
     def sensor_print_group(self, packet):
         self.s.write(struct.pack("BB", 142, packet))
@@ -193,7 +193,20 @@ class Create:
             print("(40) Radius: ",struct.unpack('>h',self.s.read(2))[0], "mm\n")
             print("(41) Right Velocity: ",struct.unpack('>h',self.s.read(2))[0], "mm/s\n")
             print("(42) Left Velocity: ",struct.unpack('>h',self.s.read(2))[0], "mm/s\n")
-        
+
     # Converts bits read from create into Boolean Values
     def bit_to_bool(self,val):
         return val == '1'
+
+    def check_bumper(self):
+        return self.sensor_check(7)[-2:]
+
+    def check_wheeldrop(self):
+        return self.sensor_check(7)[3:-2]
+
+    def check_buttons(self):
+        temp =  self.sensor_check(18)
+        return [temp[-1], temp[-3]]
+
+    def check_distance(self):
+        return self.sensor_check(19)
