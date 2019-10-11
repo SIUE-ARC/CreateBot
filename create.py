@@ -52,7 +52,66 @@ class Create:
     def leds(self, play=0, advance=0, power_color=0, power_brightness=255):
         byte1 = (0x08 if advance else 0x00) | (0x02 if play else 0x00)
         self.s.write(struct.pack("BBBB", 139, byte1, power_color, power_brightness))
+<<<<<<< HEAD
 
+=======
+        
+    def check_cliff(self):
+        temp = list()
+        temp.append(self.sensor_check(9))
+        temp.append(self.sensor_check(10))
+        temp.append(self.sensor_check(11))
+        temp.append(self.sensor_check(12))
+        return temp
+    
+    def check_cliff(self, ID):
+        if(ID == "Left"):
+            return self.sensor_check(9)
+        elif(ID == "LeftFront"):
+            return self.sensor_check(10)
+        elif(ID == "Right"):
+            return self.sensor_check(11)
+        elif(ID == "RightFront"):
+            return self.sensor_check(12)
+        else:
+            return self.check_cliff()
+            
+    def check_virtual_wall(self):
+        return self.sensor_check(13)
+        
+    def check_velocity(self):
+        return self.sensor_check(39)
+        
+    def check_velocity(self, wheel):
+        if(wheel == "Right"):
+            return self.sensor_check(41)
+        elif(wheel == "Left"):
+            return self.sensor_check(42)
+        else:
+            return self.check_velocity()
+            
+    def check_user_input(self):
+        tmp = self.sensor_check(32)
+        tmp[0] = self.sensor_check(33)
+        return tmp
+        
+    def check_user_input(self, userInput):
+        if(userInput == "Analog"):
+            return self.sensor_check(33)
+        elif(userInput == "Digital"):
+            return self.sensor_check(32)[1:]
+        elif(userInput == "D0"):
+            return self.sensor_check(32)[4]
+        elif(userInput == "D1"):
+            return self.sensor_check(32)[3]
+        elif(userInput == "D2"):
+            return self.sensor_check(32)[2]
+        elif(userInput == "D3"):
+            return self.sensor_check(32)[1]
+        else:
+            return self.check_user_input()
+    
+>>>>>>> 495999189ab095553a3972a9aa17edab05d58206
     # Read Sensors
     def sensor_check(self, packet):
         if(packet in [8,9,10,11,12,13,37]):
