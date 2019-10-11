@@ -52,9 +52,6 @@ class Create:
     def leds(self, play=0, advance=0, power_color=0, power_brightness=255):
         byte1 = (0x08 if advance else 0x00) | (0x02 if play else 0x00)
         self.s.write(struct.pack("BBBB", 139, byte1, power_color, power_brightness))
-<<<<<<< HEAD
-
-=======
         
     def check_cliff(self):
         temp = list()
@@ -111,7 +108,6 @@ class Create:
         else:
             return self.check_user_input()
     
->>>>>>> 495999189ab095553a3972a9aa17edab05d58206
     # Read Sensors
     def sensor_check(self, packet):
         if(packet in [8,9,10,11,12,13,37]):
